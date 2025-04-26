@@ -33,4 +33,12 @@ router.get("/sentiment", (req, res) => {
   });
 });
 
+router.get("/dashboard", (res, req) => {
+  try {
+    
+  } catch (err) {
+    console.log(`Error in Dashboard api: ${err.message}`);
+  }
+})
+
 module.exports = router;

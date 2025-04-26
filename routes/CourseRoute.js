@@ -1,12 +1,8 @@
-// const express = require("express");
-// const router = express.Router();
+const express = require ('express');
+const { getCourses } = require('../controllers/CourseController.js');
 
-// // Import mockCourses from the frontend mockdata file
-// const { mockCourses } = require("../../course_review/src/data/mockdata");
+const router = express.Router();
 
-// // Route to get all courses
-// router.get("/", (req, res) => {
-//   res.json(mockCourses);
-// });
+router.get('/', getCourses);
 
-// module.exports = router;
+module.exports = router;

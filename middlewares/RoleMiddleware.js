@@ -1,41 +1,22 @@
-const express = require("express");
-const authMiddleware = require("../middlewares/AuthMiddleware");
-const roleMiddleware = require("../middlewares/RoleMiddleware");
-const router = express.Router();
-
-router.get(
-  "/student-dashboard",
-  authMiddleware,
-  roleMiddleware(["student"]),
-  (req, res) => {
-    res.json({ message: "Welcome to the student dashboard!" });
-  }
-);
-
-router.get(
-  "/admin-dashboard",
-  authMiddleware,
-  roleMiddleware(["admin"]),
-  (req, res) => {
-    res.json({ message: "Welcome to the admin dashboard!" });
-  }
-);
-
-// Instructor Dashboard Route
-router.get(
-  "/instructor-dashboard",
-  authMiddleware,
-  roleMiddleware(["instructor"]),
-  (req, res) => {
-    res.json({
-      message: "Welcome to the instructor dashboard!",
-      analytics: {
-        totalCourses: 5,
-        totalStudents: 120,
-        averageRating: 4.6,
-      },
-    });
-  }
-);
-
-module.exports = router;
+const roleMiddleware = (allowedRoles) => {
+    // Return a middleware function that checks the user's role
+    return (req, res, next) => {
+      // Retrieve the user's role from the authenticated request (set by authMiddleware)
+      const userRole = req.user?.role; 
+  
+      // If there's no userRole, respond with 401 Unauthorized
+      if (!userRole) {
+        return res.status(401).json({ message: "Unauthorized: No role found" });
+      }
+  
+      // If the user's role is not included in the allowed roles, respond with 403 Forbidden
+      if (!allowedRoles.includes(userRole)) {
+        return res.status(403).json({ message: "Forbidden: Access denied" });
+      }
+  
+      // If the role is allowed, continue to the next middleware or route handler
+      next();
+    };
+  };
+  
+  module.exports = roleMiddleware;

@@ -6,11 +6,15 @@ const bodyParser = require("body-parser");
 const authRoutes = require("./routes/AuthRoute");
 const analyticsRoutes = require("./routes/AnalyticsRoute");
 const userRoutes = require("./routes/userRoute");
-
-// const courseRoutes = require("./routes/CourseRoute");
-
+const connectDB = require('./config/db.js');
+const reviewRoutes = require('./routes/ReviewRoute.js');
+const recommendationRoutes = require('./routes/recommendationRoute.js')
+const courseRoutes = require("./routes/CourseRoute.js");
+const {protect} = require('./middlewares/AuthMiddleware.js')
 // dotenv.config();
 require("dotenv").config();
+connectDB();
+
 
 const app = express();
 
@@ -21,8 +25,12 @@ app.use(bodyParser.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/analytics", analyticsRoutes);
-app.use("/api/users", userRoutes); 
-// app.use("/api/courses", courseRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/courses", courseRoutes); 
+app.use('api/reviews',reviewRoutes);
+app.use('/api/recommendations', recommendationRoutes);
+
+
 
 // Connect to MongoDB
 mongoose
